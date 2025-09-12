@@ -1,11 +1,9 @@
-// Banner.jsx
 import React, { useEffect, useState } from 'react';
-
+import bannerImage from "../../assets/banner1.jpg"
 const Banner = () => {
   const [medicineNames, setMedicineNames] = useState([]);
 
   useEffect(() => {
-    // Generate random medicine names for the floating effect
     const names = [
       "Paracetamol", "Ibuprofen", "Aspirin", "Amoxicillin", "Metformin",
       "Insulin", "Vitamin C", "Vitamin D", "Omeprazole", "Atorvastatin",
@@ -30,7 +28,15 @@ const Banner = () => {
   }, []);
 
   return (
-    <div className="relative bg-gradient-to-r from-blue-500 to-teal-300 text-white py-16 md:py-24 rounded-b-3xl overflow-hidden mb-8">
+    <div
+      className="relative text-white py-16 md:py-24 rounded-b-3xl overflow-hidden mb-8 bg-cover bg-center"
+      style={{
+        backgroundImage: `url(${bannerImage})`,
+      }}
+    >
+      {/* Overlay gradient */}
+      {/* <div className="absolute inset-0 bg-gradient-to-r from-blue-600/80 to-teal-400/80 z-0"></div> */}
+             <div className="absolute"></div>
       {/* Floating medicine names */}
       <div className="absolute inset-0 z-10">
         {medicineNames.map(medicine => (
@@ -51,7 +57,7 @@ const Banner = () => {
 
       {/* Content */}
       <div className="container mx-auto px-4 relative z-20">
-        <div className="text-center">
+        <div className="text-center text-shadow-gray-500">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 animate-fade-in-down">
             Your Health is Our Priority
           </h1>
@@ -67,7 +73,7 @@ const Banner = () => {
                 placeholder="Search medicines, brands, categories..."
                 className="flex-grow px-6 py-4 text-gray-800 focus:outline-none"
               />
-              <button className="bg-blue-600 hover:bg-blue-700 px-6 py-4 font-semibold transition-colors duration-300 w-full sm:w-auto">
+              <button className=" text-black bg-amber-200 hover:bg-amber-600 px-6 py-4 font-semibold transition-colors duration-300 w-full sm:w-auto">
                 Search
               </button>
             </div>
