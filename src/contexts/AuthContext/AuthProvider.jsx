@@ -1,27 +1,80 @@
-import React, { createContext, useState } from "react";
+// import React, { createContext, useState } from "react";
+// import { auth } from "../../firebase/firebase.init"; // your firebase config
+// import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+
+// export const AuthContext = createContext();
+
+// const AuthProvider = ({ children }) => {
+//   const [user, setUser] = useState(null);
+
+//   // Login function
+//   const loginUser = (email, password) => {
+//     return signInWithEmailAndPassword(auth, email, password);
+//   };
+
+//   // Google login
+//   const signInWithGoogle = () => {
+//     const provider = new GoogleAuthProvider();
+//     return signInWithPopup(auth, provider);
+//   };
+
+//   const createUser = (email, password) => {
+//     return createUserWithEmailAndPassword(auth, email, password);
+//   };
+
+//   const value = { user, loginUser, signInWithGoogle, createUser };
+
+//   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+// };
+
+// export default AuthProvider;
+
+
+
+// AuthProvider.jsx
+import React, { createContext, useState, useEffect } from "react";
+import { auth } from "../../firebase/firebase.init";
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged, 
+  GoogleAuthProvider, 
+  signInWithPopup 
+} from "firebase/auth";
 
 export const AuthContext = createContext();
 
+const provider = new GoogleAuthProvider();
+
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null); // store logged in user
+  const [loading, setLoading] = useState(true);
 
-  const createUser = (data) => {
-    // Your registration logic
+  // Track user login state
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setLoading(false);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const createUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+  const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);
+  const logoutUser = () => signOut(auth);
+  const signInWithGoogle = () => signInWithPopup(auth, provider);
+
+  const value = {
+    user,
+    loading,
+    createUser,
+    loginUser,
+    logoutUser,
+    signInWithGoogle,
   };
 
-  const loginUser = (email, password) => {
-    // Your login logic
-  };
-
-  const signInWithGoogle = () => {
-    // Your Google login logic
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, createUser, loginUser, signInWithGoogle }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export default AuthProvider;

@@ -1,24 +1,20 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { AuthContext } from '../../contexts/AuthContext/AuthProvider';
-import { FcGoogle } from 'react-icons/fc';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { FcGoogle } from "react-icons/fc";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { Link, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import useAuth from "../../hooks/useAuth"; // Custom hook
 
 const Login = () => {
-  const { loginUser, signInWithGoogle } = useContext(AuthContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const { loginUser, signInWithGoogle } = useAuth();
+  const navigate = useNavigate();
+
+  const { register, handleSubmit, formState: { errors } } = useForm();
+
   const [medicineNames, setMedicineNames] = useState([]);
   const [medicineIcons, setMedicineIcons] = useState([]);
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    loginUser(email, password);
-  };
-
-  const handleGoogleLogin = () => {
-    signInWithGoogle();
-  };
+  const [showPassword, setShowPassword] = useState(false); // Toggle state
 
   // Floating medicine names & icons
   useEffect(() => {
@@ -61,6 +57,27 @@ const Login = () => {
     setMedicineIcons(iconElements);
   }, []);
 
+  // Email/Password login
+  const onSubmit = async (data) => {
+    try {
+      await loginUser(data.email, data.password);
+      alert("Login successful!");
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
+  // Google login
+  const handleGoogleLogin = async () => {
+    try {
+      await signInWithGoogle();
+      navigate("/");
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-teal-100 overflow-hidden p-4">
 
@@ -70,7 +87,7 @@ const Login = () => {
           key={item.id}
           initial={{ y: 0 }}
           animate={{ y: [0, -50, 0] }}
-          transition={{ duration: item.animationDuration, repeat: Infinity, delay: item.animationDelay, ease: 'easeInOut' }}
+          transition={{ duration: item.animationDuration, repeat: Infinity, delay: item.animationDelay, ease: "easeInOut" }}
           className="absolute select-none text-gray-400 font-semibold"
           style={{
             top: `${item.top}%`,
@@ -89,7 +106,7 @@ const Login = () => {
           key={item.id}
           initial={{ x: 0, y: 0 }}
           animate={{ x: [0, 100, 0], y: [0, 100, 0] }}
-          transition={{ duration: item.duration, repeat: Infinity, delay: item.delay, ease: 'linear' }}
+          transition={{ duration: item.duration, repeat: Infinity, delay: item.delay, ease: "linear" }}
           className="absolute select-none"
           style={{
             top: `${item.top}%`,
@@ -102,33 +119,40 @@ const Login = () => {
         </motion.span>
       ))}
 
+      {/* Login Form */}
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: 'easeOut' }}
+        transition={{ duration: 1, ease: "easeOut" }}
         className="relative w-full max-w-md bg-white rounded-3xl shadow-2xl p-8 border-t-8 border-blue-400"
       >
-        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-          Login
-        </h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Login</h2>
 
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <input
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...register("email", { required: "Email is required" })}
             className="input input-bordered w-full rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-            required
           />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="input input-bordered w-full rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
-            required
-          />
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"} // toggle password
+              placeholder="Password"
+              {...register("password", { required: "Password is required" })}
+              className="input input-bordered w-full rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all pr-12"
+            />
+            <div
+              className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <AiOutlineEyeInvisible size={22} /> : <AiOutlineEye size={22} />}
+            </div>
+          </div>
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+
           <button
             type="submit"
             className="btn w-full bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white py-3 rounded-xl font-medium shadow-lg transition-all"
@@ -139,7 +163,7 @@ const Login = () => {
 
         <div className="mt-4 text-center text-gray-500">
           Don't have an account?{' '}
-          <Link to="/register" className="text-blue-500 font-semibold hover:underline">
+          <Link to="/auth/register" className="text-blue-500 font-semibold hover:underline">
             Register
           </Link>
         </div>
