@@ -1,21 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import axios from 'axios';
 
 const Featured = () => {
   const [cart, setCart] = useState([]);
+  const [featuredMedicines, setFeaturedMedicines] = useState([]);
 
-  const featuredMedicines = [
-    {
-      id: 1,
-      name: 'Vitamin D3 Capsules',
-      type: 'Capsule',
-      vendor: 'VitaCare',
-      price: 15.99,
-      originalPrice: 19.99,
-      discount: 20,
-      image: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><rect width="200" height="200" fill="%23f8f9fa"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="14" fill="%232b7bba">Medicine Image</text></svg>'
-    },
-  ];
+  // Fetch medicines from API
+  useEffect(() => {
+    const fetchMedicines = async () => {
+      try {
+        const { data } = await axios.get('http://localhost:3000/medicine');
+        // Remove details field
+        const medicinesWithoutDetails = data.map(({ details, ...rest }) => rest);
+        setFeaturedMedicines(medicinesWithoutDetails);
+      } catch (error) {
+        console.error('Failed to fetch medicines:', error);
+      }
+    };
+    fetchMedicines();
+  }, []);
 
   const addToCart = (medicine) => {
     setCart(prevCart => {
