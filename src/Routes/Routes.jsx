@@ -37,6 +37,8 @@ import Register from "../pages/Register/Register";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Featured from "../Components/Featured/Featured";
 import Shop from "../pages/Shop/Shop";
+import Cart from "../pages/Cart/Cart";
+import PrivateRoute from "../Components/PrivateRoutes/PrivateRoutes";
 
 export const router = createBrowserRouter([
   {
@@ -46,10 +48,11 @@ export const router = createBrowserRouter([
     children: [
       { path: "/", element: <Home /> },
       { path: "/featured", element: <Featured /> },
-      { path: "/details/:id", element: <Details /> },  // ✅ fix here
+      { path: "/details/:id", element: <PrivateRoute><Details /></PrivateRoute> },
       { path: "/login", element: <Login /> },
       { path: "/auth/register", element: <Register /> },
       {path: "/shop", element: <Shop />},
+      {path: "/cart", element: <Cart></Cart> },
     ],
   },
 ]);

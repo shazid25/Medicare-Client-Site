@@ -237,7 +237,7 @@ const Navbar = () => {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                 />
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 bg-white shadow-lg rounded-xl py-2 w-48">
+                  <div className="absolute right-0 mt-2 bg-amber-300 shadow-lg rounded-xl py-2 w-48">
                     <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>Update Profile</Link>
                     <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>Dashboard</Link>
                     <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100">{labels[language].logout}</button>
