@@ -36,6 +36,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Featured from "../Components/Featured/Featured";
+import Shop from "../pages/Shop/Shop";
 
 export const router = createBrowserRouter([
   {
@@ -46,8 +47,9 @@ export const router = createBrowserRouter([
       { path: "/", element: <Home /> },
       { path: "/featured", element: <Featured /> },
       { path: "/details/:id", element: <Details /> },  // ✅ fix here
-      { path: "/auth/login", element: <Login /> },
+      { path: "/login", element: <Login /> },
       { path: "/auth/register", element: <Register /> },
+      {path: "/shop", element: <Shop />},
     ],
   },
 ]);
