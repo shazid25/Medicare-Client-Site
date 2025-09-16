@@ -39,6 +39,8 @@ import Featured from "../Components/Featured/Featured";
 import Shop from "../pages/Shop/Shop";
 import Cart from "../pages/Cart/Cart";
 import PrivateRoute from "../Components/PrivateRoutes/PrivateRoutes";
+import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
+import ManageSellerMedicines from "../Dashboards/SellerDashboard/ManageSellerMedicines";
 
 export const router = createBrowserRouter([
   {
@@ -53,6 +55,8 @@ export const router = createBrowserRouter([
       { path: "/auth/register", element: <Register /> },
       {path: "/shop", element: <Shop />},
       {path: "/cart", element: <Cart></Cart> },
+      {path: "/sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
+      {path: "/manageMedicines", element: <PrivateRoute><ManageSellerMedicines></ManageSellerMedicines></PrivateRoute>},
     ],
   },
 ]);
