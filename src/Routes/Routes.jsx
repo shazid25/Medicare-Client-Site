@@ -41,6 +41,7 @@ import Cart from "../pages/Cart/Cart";
 import PrivateRoute from "../Components/PrivateRoutes/PrivateRoutes";
 import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
 import ManageSellerMedicines from "../Dashboards/SellerDashboard/ManageSellerMedicines";
+import EditMedicine from "../Dashboards/SellerDashboard/EditMedicine";
 
 export const router = createBrowserRouter([
   {
@@ -53,10 +54,12 @@ export const router = createBrowserRouter([
       { path: "/details/:id", element: <PrivateRoute><Details /></PrivateRoute> },
       { path: "/login", element: <Login /> },
       { path: "/auth/register", element: <Register /> },
-      {path: "/shop", element: <Shop />},
-      {path: "/cart", element: <Cart></Cart> },
-      {path: "/sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
-      {path: "/manageMedicines", element: <PrivateRoute><ManageSellerMedicines></ManageSellerMedicines></PrivateRoute>},
+      { path: "/shop", element: <Shop />},
+      { path: "/cart", element: <Cart></Cart> },
+      { path: "/sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
+      { path: "/manageMedicines", element: <PrivateRoute><ManageSellerMedicines></ManageSellerMedicines></PrivateRoute>},
+      { path: "/edit-medicine/:id",element: <PrivateRoute><EditMedicine></EditMedicine></PrivateRoute>},
+
     ],
   },
 ]);
