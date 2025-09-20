@@ -1,35 +1,6 @@
-// import { createBrowserRouter } from "react-router-dom";
-// import RootLayout from "../Layouts/RootLayout";
-// import Home from "../pages/Home/Home";
-// import Shop from "../pages/Shop/Shop";
-// import Login from "../pages/Login/Login";
-// import Register from "../pages/Register/Register";
-// import ErrorPage from "../pages/ErrorPage/ErrorPage";
-// import ShopByCaregory from "../pages/ShopByCaregory/ShopByCaregory";
-// import Details from "../pages/Details/Details";
-
-// export const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <RootLayout />,
-//     errorElement: <ErrorPage />,
-//     children: [
-//       { index: true, element: <Home /> },
-//       { path: "shop", element: <Shop /> },
-//       { path: "login", element: <Login /> },
-//       { path: "auth/register", element: <Register /> },
-//       { path: "category/:id", element: <ShopByCaregory /> },
-//       { path: "/details/:id", Component: Details },
-//     ],
-//   },
-
-// ]);
-
-
-
-
 import { createBrowserRouter } from "react-router-dom";
 import RootLayout from "../Layouts/RootLayout";
+import DashboardLayout from "../Layouts/DashboardLayout";
 import Home from "../pages/Home/Home";
 import Details from "../pages/Details/Details";
 import Login from "../pages/Login/Login";
@@ -41,8 +12,10 @@ import Cart from "../pages/Cart/Cart";
 import PrivateRoute from "../Components/PrivateRoutes/PrivateRoutes";
 import ManageSellerMedicines from "../Dashboards/SellerDashboard/ManageSellerMedicines";
 import EditMedicine from "../Dashboards/SellerDashboard/EditMedicine";
-import DashboardLayout from "../Layouts/dashboardLayout";
+import MainDashboard from "../Dashboards/MainDashboard/MainDashboard";
 import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
+
+
 
 export const router = createBrowserRouter([
   {
@@ -63,12 +36,18 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/dashboard",
+    path: "/",
     element: <PrivateRoute>
       <DashboardLayout></DashboardLayout>
       </PrivateRoute>,
       children: [
-      { path: "sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
+      { path: "/dashboard", element: <PrivateRoute><MainDashboard></MainDashboard></PrivateRoute>},
+      { path: "/dashboard/sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
+
+
       ] 
      }
+
+
+  
 ]);
