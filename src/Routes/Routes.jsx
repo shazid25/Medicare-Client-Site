@@ -30,23 +30,47 @@ export const router = createBrowserRouter([
       { path: "/auth/register", element: <Register /> },
       { path: "/shop", element: <Shop />},
       { path: "/cart", element: <Cart></Cart> },
-      { path: "/manageMedicines", element: <PrivateRoute><ManageSellerMedicines></ManageSellerMedicines></PrivateRoute>},
-      { path: "/edit-medicine/:id",element: <PrivateRoute><EditMedicine></EditMedicine></PrivateRoute>},
+      // { path: "/manageMedicines", element: <PrivateRoute><ManageSellerMedicines></ManageSellerMedicines></PrivateRoute>},
+      // { path: "/edit-medicine/:id",element: <PrivateRoute><EditMedicine></EditMedicine></PrivateRoute>},
 
     ],
   },
+  // {
+  //   path: "/",
+  //   element: <PrivateRoute>
+  //     <DashboardLayout></DashboardLayout>
+  //     </PrivateRoute>,
+  //     children: [
+  //     { path: "/dashboard", element: <PrivateRoute><MainDashboard></MainDashboard></PrivateRoute>},
+  //     { path: "/dashboard/sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
+  //     { path: "/manageMedicines", element: <PrivateRoute><ManageSellerMedicines></ManageSellerMedicines></PrivateRoute>},
+  //     { path: "/edit-medicine/:id",element: <PrivateRoute><EditMedicine></EditMedicine></PrivateRoute>},
+
+
+  //     ] 
+  // }
+
+
   {
-    path: "/",
-    element: <PrivateRoute>
+  path: "/",
+  element: (
+    <PrivateRoute>
       <DashboardLayout></DashboardLayout>
-      </PrivateRoute>,
+    </PrivateRoute>
+  ),
+  children: [
+    { 
+      path: "dashboard",
+      element: <PrivateRoute><MainDashboard /></PrivateRoute>,
       children: [
-      { path: "/dashboard", element: <PrivateRoute><MainDashboard></MainDashboard></PrivateRoute>},
-      { path: "/dashboard/sellerForm", element: <PrivateRoute><SellerForm></SellerForm></PrivateRoute>},
-
-
-      ] 
-     }
+        { path: "", element: <div>Dashboard Home</div> }, // Default dashboard page
+        { path: "sellerForm", element: <PrivateRoute><SellerForm /></PrivateRoute> },
+        { path: "manageMedicines", element: <PrivateRoute><ManageSellerMedicines /></PrivateRoute> },
+        { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> }
+      ]
+    }
+  ]
+}
 
 
   

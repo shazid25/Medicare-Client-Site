@@ -24,6 +24,8 @@ import React from 'react'
 import Banner from '../../Components/Banner/Banner';
 import Category from '../../Components/Category/Category';
 import Featured from '../../Components/Featured/Featured';
+import Review from '../../Components/Review/Review';
+import Countdown from '../../Components/Countdown/Countdown';
 
 const Home = () => {
   return (
@@ -31,6 +33,10 @@ const Home = () => {
       <Banner></Banner>
       <Category></Category>
       <Featured></Featured>
+      <div className='flex flex-col md:flex-row gap-2'>
+        <Review></Review>
+      <Countdown></Countdown>
+      </div>
     </div>
   )
 }
