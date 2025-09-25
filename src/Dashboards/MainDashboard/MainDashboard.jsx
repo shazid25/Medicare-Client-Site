@@ -9,7 +9,7 @@
 //         <div className="p-4 border-b border-blue-700">
 //           <h1 className="text-xl font-bold">MediCare Dashboard</h1>
 //         </div>
-        
+
 //         <nav className="p-4">
 //           <ul className="space-y-2">
 //             <li>
@@ -20,7 +20,7 @@
 //                 Dashboard
 //               </a>
 //             </li>
-         
+
 
 //    <li>
 //   <Link
@@ -96,16 +96,16 @@
 //                 Reports
 //               </a>
 //             </li>
-          
+
 //           </ul>
 //         </nav>
 //       </div>
 
 //       {/* Main Content */}
-    
+
 //       <Outlet></Outlet>
 
-    
+
 //     </div>
 //   );
 // };
@@ -130,7 +130,7 @@ const MainDashboard = () => {
         <div className="p-4 border-b border-blue-700">
           <h1 className="text-xl font-bold">MediCare Dashboard</h1>
         </div>
-        
+
         <nav className="p-4">
           <ul className="space-y-2">
             <li>
@@ -144,7 +144,7 @@ const MainDashboard = () => {
                 Dashboard
               </Link>
             </li>
-         
+
             <li>
               <Link
                 to="/dashboard/sellerForm"
@@ -168,6 +168,33 @@ const MainDashboard = () => {
               </Link>
             </li>
 
+
+
+            <li>
+              <Link
+                to="/dashboard/beSeller"
+                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 7h18M3 12h18M3 17h18M9 7v10M15 7v10"
+                  />
+                </svg>
+                Be a Seller
+              </Link>
+            </li>
+
+
+
             <li>
               <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
                 <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -184,7 +211,7 @@ const MainDashboard = () => {
                 Customers
               </a>
             </li>
-            
+
             <li>
               <Link
                 to="/dashboard/manageMedicines"

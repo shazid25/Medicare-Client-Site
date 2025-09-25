@@ -82,6 +82,7 @@ import ManageSellerMedicines from "../Dashboards/SellerDashboard/ManageSellerMed
 import EditMedicine from "../Dashboards/SellerDashboard/EditMedicine";
 import MainDashboard from "../Dashboards/MainDashboard/MainDashboard";
 import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
+import BeSeller from "../Dashboards/SellerDashboard/BeSeller";
 
 
 
@@ -118,7 +119,8 @@ export const router = createBrowserRouter([
         { path: "", element: <div>Dashboard Home</div> }, // Default dashboard page
         { path: "sellerForm", element: <PrivateRoute><SellerForm /></PrivateRoute> },
         { path: "manageMedicines", element: <PrivateRoute><ManageSellerMedicines /></PrivateRoute> },
-        { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> }
+        { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> },
+        { path: "beSeller", element: <PrivateRoute><BeSeller></BeSeller></PrivateRoute>}
       ]
     }
   ]
