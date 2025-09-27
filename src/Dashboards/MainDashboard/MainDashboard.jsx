@@ -168,6 +168,29 @@ const MainDashboard = () => {
               </Link>
             </li>
 
+            <li>
+              <Link
+                to="/dashboard/sellerApplication"
+                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+              >
+                <svg
+                  className="w-5 h-5 mr-3"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v12a2 2 0 01-2 2z"
+                  />
+                </svg>
+                Seller Application
+              </Link>
+            </li>
+
 
 
             <li>

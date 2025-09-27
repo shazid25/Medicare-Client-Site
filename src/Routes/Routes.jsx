@@ -83,6 +83,8 @@ import EditMedicine from "../Dashboards/SellerDashboard/EditMedicine";
 import MainDashboard from "../Dashboards/MainDashboard/MainDashboard";
 import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
 import BeSeller from "../Dashboards/SellerDashboard/BeSeller";
+import SellerApplication from "../Dashboards/AdminDashboard/SellerApplicationsAdmin";
+// import SellerApplication from "../Dashboards/AdminDashboard/SellerApplications";
 
 
 
@@ -120,7 +122,9 @@ export const router = createBrowserRouter([
         { path: "sellerForm", element: <PrivateRoute><SellerForm /></PrivateRoute> },
         { path: "manageMedicines", element: <PrivateRoute><ManageSellerMedicines /></PrivateRoute> },
         { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> },
-        { path: "beSeller", element: <PrivateRoute><BeSeller></BeSeller></PrivateRoute>}
+        { path: "beSeller", element: <PrivateRoute><BeSeller></BeSeller></PrivateRoute>},
+        // { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute> },
+        { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute>}
       ]
     }
   ]

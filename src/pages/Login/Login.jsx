@@ -4,6 +4,7 @@
 // import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 // import { Link, useNavigate } from "react-router-dom";
 // import { useForm } from "react-hook-form";
+// import Swal from "sweetalert2"; // Import SweetAlert2
 // import useAuth from "../../hooks/useAuth"; // Custom hook
 
 // const Login = () => {
@@ -14,7 +15,7 @@
 
 //   const [medicineNames, setMedicineNames] = useState([]);
 //   const [medicineIcons, setMedicineIcons] = useState([]);
-//   const [showPassword, setShowPassword] = useState(false); // Toggle state
+//   const [showPassword, setShowPassword] = useState(false);
 
 //   // Floating medicine names & icons
 //   useEffect(() => {
@@ -61,10 +62,22 @@
 //   const onSubmit = async (data) => {
 //     try {
 //       await loginUser(data.email, data.password);
-//       alert("Login successful!");
-//       navigate("/");
+//       // Success popup with 1-second timer
+//       Swal.fire({
+//         icon: "success",
+//         title: "Login Successful!",
+//         showConfirmButton: false,
+//         timer: 1000,
+//         timerProgressBar: true,
+//       }).then(() => {
+//         navigate("/");
+//       });
 //     } catch (error) {
-//       alert(error.message);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Login Failed",
+//         text: error.message,
+//       });
 //     }
 //   };
 
@@ -72,15 +85,26 @@
 //   const handleGoogleLogin = async () => {
 //     try {
 //       await signInWithGoogle();
-//       navigate("/");
+//       Swal.fire({
+//         icon: "success",
+//         title: "Login Successful!",
+//         showConfirmButton: false,
+//         timer: 1000,
+//         timerProgressBar: true,
+//       }).then(() => {
+//         navigate("/");
+//       });
 //     } catch (error) {
-//       alert(error.message);
+//       Swal.fire({
+//         icon: "error",
+//         title: "Login Failed",
+//         text: error.message,
+//       });
 //     }
 //   };
 
 //   return (
 //     <div className="relative flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-teal-100 overflow-hidden p-4">
-
 //       {/* Floating medicine names */}
 //       {medicineNames.map((item) => (
 //         <motion.span
@@ -135,11 +159,15 @@
 //             {...register("email", { required: "Email is required" })}
 //             className="input input-bordered w-full rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
 //           />
-//           {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+//           {errors.email && Swal.fire({
+//             icon: "error",
+//             title: "Error",
+//             text: errors.email.message,
+//           })}
 
 //           <div className="relative">
 //             <input
-//               type={showPassword ? "text" : "password"} // toggle password
+//               type={showPassword ? "text" : "password"}
 //               placeholder="Password"
 //               {...register("password", { required: "Password is required" })}
 //               className="input input-bordered w-full rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all pr-12"
@@ -151,7 +179,11 @@
 //               {showPassword ? <AiOutlineEyeInvisible size={22} /> : <AiOutlineEye size={22} />}
 //             </div>
 //           </div>
-//           {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+//           {errors.password && Swal.fire({
+//             icon: "error",
+//             title: "Error",
+//             text: errors.password.message,
+//           })}
 
 //           <button
 //             type="submit"
@@ -183,10 +215,6 @@
 // };
 
 // export default Login;
-
-
-
-
 
 
 
