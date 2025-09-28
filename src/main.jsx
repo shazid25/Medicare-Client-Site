@@ -68,11 +68,13 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
+     
+       <AuthProvider>
         <AOSWrapper>
           <RouterProvider router={router} />
         </AOSWrapper>
       </AuthProvider>
+   
     </QueryClientProvider>
   </StrictMode>
 );

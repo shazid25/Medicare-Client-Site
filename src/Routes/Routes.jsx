@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
         { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute>},
         { path: "admin", element: <PrivateRoute><AdminDashboard></AdminDashboard></PrivateRoute>},
         { path: "user", element: <PrivateRoute><UserDashboard></UserDashboard></PrivateRoute>},
-        { path: "editBanner/:id" , element: <PrivateRoute><AdminBannerManagement></AdminBannerManagement></PrivateRoute>}
+        { path: "editBanner" , element: <PrivateRoute><AdminBannerManagement></AdminBannerManagement></PrivateRoute>}
       ]
     }
   ]
