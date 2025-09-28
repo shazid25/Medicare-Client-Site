@@ -1,3 +1,5 @@
+
+
 // import React, { useState, useContext } from "react";
 // import { Link, useNavigate } from "react-router-dom";
 // import { FaShoppingCart, FaGlobe, FaBars, FaTimes } from "react-icons/fa";
@@ -120,6 +122,10 @@
 
 
 
+
+
+
+
 import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart, FaGlobe, FaBars, FaTimes } from "react-icons/fa";
@@ -146,6 +152,13 @@ const Navbar = () => {
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  // helper: decide dashboard route based on role
+  const getDashboardLink = () => {
+    if (user?.role === "admin") return "/dashboard/admin";
+    if (user?.role === "seller") return "/dashboard/seller";
+    return "/dashboard/user"; // default for normal user
   };
 
   return (
@@ -192,9 +205,15 @@ const Navbar = () => {
                 />
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 bg-amber-300 shadow-lg rounded-xl py-2 w-48">
-                    <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>Update Profile</Link>
-                    <Link to="/dashboard" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>Dashboard</Link>
-                    <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100">{labels[language].logout}</button>
+                    <Link to="/profile" className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>
+                      Update Profile
+                    </Link>
+                    <Link to={getDashboardLink()} className="block px-4 py-2 hover:bg-gray-100" onClick={() => setDropdownOpen(false)}>
+                      Dashboard
+                    </Link>
+                    <button onClick={handleLogout} className="w-full text-left px-4 py-2 hover:bg-gray-100">
+                      {labels[language].logout}
+                    </button>
                   </div>
                 )}
               </div>
@@ -210,8 +229,12 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="md:hidden px-4 py-4 space-y-2 bg-white shadow-lg">
-          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block hover:text-blue-600">{labels[language].home}</Link>
-          <Link to="/shop" onClick={() => setMobileMenuOpen(false)} className="block hover:text-blue-600">{labels[language].shop}</Link>
+          <Link to="/" onClick={() => setMobileMenuOpen(false)} className="block hover:text-blue-600">
+            {labels[language].home}
+          </Link>
+          <Link to="/shop" onClick={() => setMobileMenuOpen(false)} className="block hover:text-blue-600">
+            {labels[language].shop}
+          </Link>
 
           <button className="relative p-2 border rounded-lg hover:bg-gray-100 w-full text-left">
             <FaShoppingCart /> {labels[language].cart}
@@ -224,12 +247,20 @@ const Navbar = () => {
 
           {user ? (
             <>
-              <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="block text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Update Profile</Link>
-              <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="block text-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">Dashboard</Link>
-              <button onClick={handleLogout} className="block w-full text-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">{labels[language].logout}</button>
+              <Link to="/profile" onClick={() => setMobileMenuOpen(false)} className="block text-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                Update Profile
+              </Link>
+              <Link to={getDashboardLink()} onClick={() => setMobileMenuOpen(false)} className="block text-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300">
+                Dashboard
+              </Link>
+              <button onClick={handleLogout} className="block w-full text-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                {labels[language].logout}
+              </button>
             </>
           ) : (
-            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="block text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">{labels[language].join}</Link>
+            <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="block text-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+              {labels[language].join}
+            </Link>
           )}
         </div>
       )}

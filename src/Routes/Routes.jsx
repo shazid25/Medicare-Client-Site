@@ -14,6 +14,9 @@
 // import EditMedicine from "../Dashboards/SellerDashboard/EditMedicine";
 // import MainDashboard from "../Dashboards/MainDashboard/MainDashboard";
 // import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
+// import BeSeller from "../Dashboards/SellerDashboard/BeSeller";
+// import SellerApplication from "../Dashboards/AdminDashboard/SellerApplicationsAdmin";
+// // import SellerApplication from "../Dashboards/AdminDashboard/SellerApplications";
 
 
 
@@ -50,7 +53,10 @@
 //         { path: "", element: <div>Dashboard Home</div> }, // Default dashboard page
 //         { path: "sellerForm", element: <PrivateRoute><SellerForm /></PrivateRoute> },
 //         { path: "manageMedicines", element: <PrivateRoute><ManageSellerMedicines /></PrivateRoute> },
-//         { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> }
+//         { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> },
+//         { path: "beSeller", element: <PrivateRoute><BeSeller></BeSeller></PrivateRoute>},
+//         // { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute> },
+//         { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute>}
 //       ]
 //     }
 //   ]
@@ -59,9 +65,6 @@
 
   
 // ]);
-
-
-
 
 
 
@@ -84,54 +87,110 @@ import MainDashboard from "../Dashboards/MainDashboard/MainDashboard";
 import SellerForm from "../Dashboards/SellerDashboard/SellerForm";
 import BeSeller from "../Dashboards/SellerDashboard/BeSeller";
 import SellerApplication from "../Dashboards/AdminDashboard/SellerApplicationsAdmin";
-// import SellerApplication from "../Dashboards/AdminDashboard/SellerApplications";
-
-
-
+// import AdminDashboard from "../Dashboards/AdminDashboard/AdminDashboard";
+import UserDashboard from "../Dashboards/UserDashboard/UserDashboard";
+import AdminDashboard from "../Dashboards/AdminDashboard/AdminDashboard";
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootLayout />,       // ✅ must be element={<RootLayout />}
+    element: <RootLayout />,
     errorElement: <ErrorPage />,
     children: [
-      { path: "/", element: <Home /> },
-      { path: "/featured", element: <Featured /> },
-      { path: "/details/:id", element: <PrivateRoute><Details /></PrivateRoute> },
-      { path: "/login", element: <Login /> },
-      { path: "/auth/register", element: <Register /> },
-      { path: "/shop", element: <Shop />},
-      { path: "/cart", element: <Cart></Cart> },
-      
-
+      { index: true, element: <Home /> },
+      { path: "featured", element: <Featured /> },
+      { 
+        path: "details/:id", 
+        element: (
+          <PrivateRoute>
+            <Details />
+          </PrivateRoute>
+        ) 
+      },
+      { path: "login", element: <Login /> },
+      { path: "auth/register", element: <Register /> },
+      { path: "shop", element: <Shop /> },
+      { 
+        path: "cart", 
+        element: (
+          <PrivateRoute>
+            <Cart />
+          </PrivateRoute>
+        ) 
+      },
     ],
   },
- 
- {
-  path: "/",
-  element: (
-    <PrivateRoute>
-      <DashboardLayout></DashboardLayout>
-    </PrivateRoute>
-  ),
-  children: [
-    { 
-      path: "dashboard",
-      element: <PrivateRoute><MainDashboard /></PrivateRoute>,
-      children: [
-        { path: "", element: <div>Dashboard Home</div> }, // Default dashboard page
-        { path: "sellerForm", element: <PrivateRoute><SellerForm /></PrivateRoute> },
-        { path: "manageMedicines", element: <PrivateRoute><ManageSellerMedicines /></PrivateRoute> },
-        { path: "edit-medicine/:id", element: <PrivateRoute><EditMedicine /></PrivateRoute> },
-        { path: "beSeller", element: <PrivateRoute><BeSeller></BeSeller></PrivateRoute>},
-        // { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute> },
-        { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute>}
-      ]
-    }
-  ]
-}
-
-
-  
+  {
+    path: "dashboard",
+    element: (
+      <PrivateRoute>
+        <DashboardLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      { 
+        index: true, 
+        element: <MainDashboard /> 
+      },
+      // Admin-only routes
+      {
+        path: "admin",
+        element: <PrivateRoute allowedRoles={['admin']} />,
+        children: [
+          { 
+            index: true, 
+            element: <AdminDashboard /> 
+          },
+          { 
+            path: "seller-applications", 
+            element: <SellerApplication /> 
+          },
+          // Add other admin routes here
+          { 
+            path: "users", 
+            element: <div>User Management</div> 
+          },
+        ]
+      },
+      // Seller-only routes
+      {
+        path: "seller",
+        element: <PrivateRoute allowedRoles={['seller', 'admin']} />,
+        children: [
+          { 
+            path: "seller-form", 
+            element: <SellerForm /> 
+          },
+          { 
+            path: "manage-medicines", 
+            element: <ManageSellerMedicines /> 
+          },
+          { 
+            path: "edit-medicine/:id", 
+            element: <EditMedicine /> 
+          },
+          // Add other seller routes here
+        ]
+      },
+      // User routes (accessible to all authenticated users)
+      {
+        path: "user",
+        element: <PrivateRoute allowedRoles={['user', 'seller', 'admin']} />,
+        children: [
+          { 
+            index: true, 
+            element: <UserDashboard /> 
+          },
+          { 
+            path: "profile", 
+            element: <div>User Profile</div> 
+          },
+          { 
+            path: "be-seller", 
+            element: <BeSeller /> 
+          },
+          // Add other user routes here
+        ]
+      },
+    ]
+  }
 ]);
-
-

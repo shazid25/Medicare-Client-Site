@@ -107,28 +107,43 @@
 
 
 
-
-
-
 // src/Dashboards/SellerDashboard/ManageSellerMedicines.jsx
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { getAuth } from "firebase/auth"; // Firebase v9+ modular
 
 const ManageSellerMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const auth = getAuth(); // Firebase auth instance
+
+  // Helper: get Firebase token
+  const getToken = async () => {
+    const user = auth.currentUser;
+    if (!user) return null;
+    return await user.getIdToken();
+  };
+
   // Fetch all medicines
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/medicine");
+        const token = await getToken();
+        if (!token) throw new Error("User not authenticated");
+
+        const { data } = await axios.get("http://localhost:3000/medicine", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
         setMedicines(data);
       } catch (err) {
         console.error("Error fetching medicines:", err);
+        Swal.fire("Error", err.message || "Failed to fetch medicines", "error");
       } finally {
         setLoading(false);
       }
@@ -148,11 +163,19 @@ const ManageSellerMedicines = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:3000/medicine/${id}`);
+          const token = await getToken();
+          if (!token) throw new Error("User not authenticated");
+
+          await axios.delete(`http://localhost:3000/medicine/${id}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          });
           setMedicines((prev) => prev.filter((m) => m._id !== id));
           Swal.fire("Deleted!", "Medicine has been deleted.", "success");
         } catch (err) {
-          Swal.fire("Error", "Failed to delete medicine.", "error");
+          console.error("Error deleting medicine:", err);
+          Swal.fire("Error", err.message || "Failed to delete medicine", "error");
         }
       }
     });
@@ -192,7 +215,6 @@ const ManageSellerMedicines = () => {
               </div>
 
               <div className="flex gap-3 mt-4">
-                {/* Link to nested dashboard edit route */}
                 <Link
                   to={`/dashboard/edit-medicine/${med._id}`}
                   className="flex-1 px-4 py-2 rounded-lg bg-blue-500 text-white hover:bg-blue-600 text-center"
