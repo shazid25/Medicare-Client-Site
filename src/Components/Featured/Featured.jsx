@@ -1,7 +1,8 @@
-// import React, { useState, useEffect } from 'react';
-// import { motion } from 'framer-motion';
-// import axios from 'axios';
-// import { Link } from 'react-router-dom';
+// // Featured.jsx
+// import React, { useState, useEffect } from "react";
+// import { motion } from "framer-motion";
+// import axios from "axios";
+// import { Link } from "react-router-dom";
 
 // const Featured = () => {
 //   const [cart, setCart] = useState([]);
@@ -10,19 +11,24 @@
 //   useEffect(() => {
 //     const fetchMedicines = async () => {
 //       try {
-//         const { data } = await axios.get('http://localhost:3000/medicine');
-//         setFeaturedMedicines(data);
-//       } catch (error) {
-//         console.error('Failed to fetch medicines:', error);
+//         const res = await axios.get("http://localhost:3000/medicine");
+//         setFeaturedMedicines(Array.isArray(res.data.data) ? res.data.data : []);
+//       } catch (err) {
+//         console.error("Failed to fetch medicines:", err);
 //       }
 //     };
 //     fetchMedicines();
 //   }, []);
 
 //   const addToCart = (medicine) => {
-//     setCart(prev => {
-//       const existing = prev.find(item => item._id === medicine._id);
-//       if (existing) return prev.map(item => item._id === medicine._id ? { ...item, quantity: item.quantity + 1 } : item);
+//     setCart((prev) => {
+//       const existing = prev.find((item) => item._id === medicine._id);
+//       if (existing)
+//         return prev.map((item) =>
+//           item._id === medicine._id
+//             ? { ...item, quantity: item.quantity + 1 }
+//             : item
+//         );
 //       return [...prev, { ...medicine, quantity: 1 }];
 //     });
 //   };
@@ -55,29 +61,47 @@
 //                 {medicine.discount}% OFF
 //               </div>
 //             )}
-//             <img src={medicine.image} alt={medicine.name} className="w-full h-48 object-cover" />
+//             <img
+//               src={medicine.image}
+//               alt={medicine.name}
+//               className="w-full h-48 object-cover"
+//             />
 //             <div className="p-4">
 //               <div className="flex justify-between items-start mb-2">
-//                 <h3 className="text-lg font-semibold text-gray-800">{medicine.name}</h3>
-//                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">{medicine.type}</span>
+//                 <h3 className="text-lg font-semibold text-gray-800">
+//                   {medicine.name}
+//                 </h3>
+//                 <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
+//                   {medicine.type}
+//                 </span>
 //               </div>
-//               <p className="text-gray-500 text-sm mb-3">By: {medicine.vendor}</p>
+//               <p className="text-gray-500 text-sm mb-3">
+//                 By: {medicine.vendor}
+//               </p>
 //               <div className="flex justify-between items-center">
 //                 <div>
-//                   <span className="font-bold text-gray-900">${medicine.price}</span>
-//                   {medicine.originalPrice && <span className="text-gray-500 text-sm line-through ml-2">${medicine.originalPrice}</span>}
+//                   <span className="font-bold text-gray-900">
+//                     ${medicine.price}
+//                   </span>
+//                   {medicine.originalPrice && (
+//                     <span className="text-gray-500 text-sm line-through ml-2">
+//                       ${medicine.originalPrice}
+//                     </span>
+//                   )}
 //                 </div>
 //               </div>
 
-//               {/* Details button */}
-//               <Link to={`/details/${medicine._id}`}
-//                 className="block text-center mt-3 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white px-3 py-2 rounded-full text-sm font-medium transition-all duration-300">
+//               <Link
+//                 to={`/details/${medicine._id}`}
+//                 className="block text-center mt-3 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white px-3 py-2 rounded-full text-sm font-medium transition-all duration-300"
+//               >
 //                 Details
 //               </Link>
 
-//               {/* Add to Cart button */}
-//               <button onClick={() => addToCart(medicine)}
-//                 className="w-full mt-2 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white px-3 py-2 rounded-full text-sm font-medium transition-all duration-300">
+//               <button
+//                 onClick={() => addToCart(medicine)}
+//                 className="w-full mt-2 bg-gradient-to-r from-blue-500 to-teal-500 hover:from-blue-600 hover:to-teal-600 text-white px-3 py-2 rounded-full text-sm font-medium transition-all duration-300"
+//               >
 //                 Add to Cart
 //               </button>
 //             </div>
@@ -93,20 +117,27 @@
 
 
 
+
+
+
+
+
+
+
+
+// Featured.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 const Featured = () => {
-  const [cart, setCart] = useState([]);
   const [featuredMedicines, setFeaturedMedicines] = useState([]);
 
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
         const res = await axios.get("http://localhost:3000/medicine");
-        // Access the array from the response
         setFeaturedMedicines(Array.isArray(res.data.data) ? res.data.data : []);
       } catch (err) {
         console.error("Failed to fetch medicines:", err);
@@ -115,15 +146,42 @@ const Featured = () => {
     fetchMedicines();
   }, []);
 
-  const addToCart = (medicine) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item._id === medicine._id);
-      if (existing) return prev.map((item) => (item._id === medicine._id ? { ...item, quantity: item.quantity + 1 } : item));
-      return [...prev, { ...medicine, quantity: 1 }];
-    });
+  // Get current cart from localStorage
+  const getCurrentCart = () => {
+    return JSON.parse(localStorage.getItem('medicineCart')) || [];
   };
 
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  // Update cart count for display
+  const getTotalCartItems = () => {
+    const cart = getCurrentCart();
+    return cart.reduce((acc, item) => acc + item.quantity, 0);
+  };
+
+  const addToCart = (medicine) => {
+    const currentCart = getCurrentCart();
+    const existingItem = currentCart.find((item) => item._id === medicine._id);
+    
+    let updatedCart;
+    if (existingItem) {
+      updatedCart = currentCart.map((item) =>
+        item._id === medicine._id 
+          ? { ...item, quantity: item.quantity + 1 } 
+          : item
+      );
+    } else {
+      updatedCart = [...currentCart, { ...medicine, quantity: 1 }];
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('medicineCart', JSON.stringify(updatedCart));
+    
+    // Force update for cart display
+    window.dispatchEvent(new Event('storage'));
+    
+    console.log('Added to cart:', medicine.name);
+  };
+
+  const totalItems = getTotalCartItems();
 
   return (
     <section className="container mx-auto px-4 mb-12">
@@ -131,7 +189,15 @@ const Featured = () => {
         <h2 className="text-3xl font-bold relative pb-3 after:absolute after:bottom-0 after:left-0 after:w-16 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-teal-500">
           Featured Medicines
         </h2>
-        <div className="mt-4 sm:mt-0 text-lg font-medium text-blue-600">Cart: {totalItems} items</div>
+        <div className="mt-4 sm:mt-0 text-lg font-medium text-blue-600 flex items-center gap-2">
+          <span>Cart: {totalItems} items</span>
+          <Link 
+            to="/transactions" 
+            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm transition-colors"
+          >
+            Checkout
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -149,17 +215,33 @@ const Featured = () => {
                 {medicine.discount}% OFF
               </div>
             )}
-            <img src={medicine.image} alt={medicine.name} className="w-full h-48 object-cover" />
+            <img
+              src={medicine.image}
+              alt={medicine.name}
+              className="w-full h-48 object-cover"
+            />
             <div className="p-4">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-semibold text-gray-800">{medicine.name}</h3>
-                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">{medicine.type}</span>
+                <h3 className="text-lg font-semibold text-gray-800">
+                  {medicine.name}
+                </h3>
+                <span className="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
+                  {medicine.type}
+                </span>
               </div>
-              <p className="text-gray-500 text-sm mb-3">By: {medicine.vendor}</p>
+              <p className="text-gray-500 text-sm mb-3">
+                By: {medicine.vendor}
+              </p>
               <div className="flex justify-between items-center">
                 <div>
-                  <span className="font-bold text-gray-900">${medicine.price}</span>
-                  {medicine.originalPrice && <span className="text-gray-500 text-sm line-through ml-2">${medicine.originalPrice}</span>}
+                  <span className="font-bold text-gray-900">
+                    ${medicine.price}
+                  </span>
+                  {medicine.originalPrice && (
+                    <span className="text-gray-500 text-sm line-through ml-2">
+                      ${medicine.originalPrice}
+                    </span>
+                  )}
                 </div>
               </div>
 
