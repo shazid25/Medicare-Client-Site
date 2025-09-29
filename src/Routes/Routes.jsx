@@ -8,7 +8,7 @@ import Register from "../pages/Register/Register";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Featured from "../Components/Featured/Featured";
 import Shop from "../pages/Shop/Shop";
-import Cart from "../pages/Cart/Cart";
+// import Cart from "../pages/Cart/Cart";
 import PrivateRoute from "../Components/PrivateRoutes/PrivateRoutes";
 import ManageSellerMedicines from "../Dashboards/SellerDashboard/ManageSellerMedicines";
 import EditMedicine from "../Dashboards/SellerDashboard/EditMedicine";
@@ -19,6 +19,7 @@ import SellerApplication from "../Dashboards/AdminDashboard/SellerApplicationsAd
 import AdminDashboard from "../Dashboards/AdminDashboard/AdminDashboard";
 import UserDashboard from "../Dashboards/UserDashboard/UserDashboard";
 import AdminBannerManagement from "../Dashboards/AdminDashboard/AdminBannerManagement";
+import UserTransaction from "../Dashboards/UserDashboard/UserTransection";
 
 export const router = createBrowserRouter([
   {
@@ -32,7 +33,7 @@ export const router = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "/auth/register", element: <Register /> },
       { path: "/shop", element: <Shop />},
-      { path: "/cart", element: <Cart></Cart> },
+      // { path: "/cart", element: <Cart></Cart> },
       
 
     ],
@@ -58,7 +59,8 @@ export const router = createBrowserRouter([
         { path: "sellerApplication", element: <PrivateRoute><SellerApplication></SellerApplication></PrivateRoute>},
         { path: "admin", element: <PrivateRoute><AdminDashboard></AdminDashboard></PrivateRoute>},
         { path: "user", element: <PrivateRoute><UserDashboard></UserDashboard></PrivateRoute>},
-        { path: "editBanner" , element: <PrivateRoute><AdminBannerManagement></AdminBannerManagement></PrivateRoute>}
+        { path: "editBanner" , element: <PrivateRoute><AdminBannerManagement></AdminBannerManagement></PrivateRoute>},
+        { path: "transaction", element: <UserTransaction /> }, 
       ]
     }
   ]

@@ -450,6 +450,9 @@
 
 
 
+
+
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
@@ -632,7 +635,7 @@ const Login = () => {
 
         <div className="mt-4 text-center text-gray-500">
           Don&apos;t have an account?{" "}
-          <Link to="/register" className="text-blue-500 font-semibold hover:underline">
+          <Link to="/auth/register" className="text-blue-500 font-semibold hover:underline">
             Register
           </Link>
         </div>

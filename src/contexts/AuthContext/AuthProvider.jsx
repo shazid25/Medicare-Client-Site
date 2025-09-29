@@ -121,6 +121,67 @@
 
 
 
+// // src/contexts/AuthContext/AuthProvider.jsx
+// import React, { createContext, useContext, useState, useEffect } from "react";
+// import { auth } from "../../firebase/firebase.init";
+// import {
+//   createUserWithEmailAndPassword,
+//   signInWithEmailAndPassword,
+//   signOut,
+//   onAuthStateChanged,
+//   GoogleAuthProvider,
+//   signInWithPopup,
+// } from "firebase/auth";
+// import axios from "axios";
+
+// // Create context
+// export const AuthContext = createContext();
+
+// const provider = new GoogleAuthProvider();
+
+// const AuthProvider = ({ children }) => {
+//   const [user, setUser] = useState(null);
+//   const [loading, setLoading] = useState(true);
+
+//   // Track user login state
+//   useEffect(() => {
+//     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+//       if (currentUser) {
+//         setUser(currentUser);
+
+//         // Save or update user in backend
+//         await axios.post("http://localhost:3000/users", {
+//           email: currentUser.email,
+//           name: currentUser.displayName || "User",
+//         });
+//       } else {
+//         setUser(null);
+//       }
+//       setLoading(false);
+//     });
+//     return () => unsubscribe();
+//   }, []);
+
+//   // Auth functions
+//   const createUser = (email, password) => createUserWithEmailAndPassword(auth, email, password);
+//   const loginUser = (email, password) => signInWithEmailAndPassword(auth, email, password);
+//   const logoutUser = () => signOut(auth);
+//   const signInWithGoogle = () => signInWithPopup(auth, provider);
+
+//   const value = { user, loading, createUser, loginUser, logoutUser, signInWithGoogle };
+
+//   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+// };
+
+// // Custom hook
+// export const useAuth = () => useContext(AuthContext);
+
+// export default AuthProvider;
+
+
+
+
+
 // src/contexts/AuthContext/AuthProvider.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { auth } from "../../firebase/firebase.init";

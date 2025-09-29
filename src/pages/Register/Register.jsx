@@ -237,6 +237,7 @@
 
 
 
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FcGoogle } from "react-icons/fc";
@@ -250,13 +251,21 @@ import { auth } from "../../firebase/firebase.init";
 import useAxios from "../../hooks/useAxios";
 
 const Register = () => {
-  const { createUser, signInWithGoogle } = useAuth();
+  const authContext = useAuth();
   const navigate = useNavigate();
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [medicineNames, setMedicineNames] = useState([]);
   const [medicineIcons, setMedicineIcons] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [authLoading, setAuthLoading] = useState(true);
   const axiosInstance = useAxios();
+
+  // Check if auth context is properly loaded
+  useEffect(() => {
+    if (authContext !== undefined) {
+      setAuthLoading(false);
+    }
+  }, [authContext]);
 
   // Floating animations
   useEffect(() => {
@@ -293,6 +302,38 @@ const Register = () => {
     setMedicineIcons(iconElements);
   }, []);
 
+  // Show loading while auth context is initializing
+  if (authLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-teal-100">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Loading authentication...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error if auth context is not available
+  if (!authContext) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-100 to-teal-100">
+        <div className="text-center bg-white p-8 rounded-3xl shadow-2xl">
+          <h2 className="text-2xl font-bold text-red-500 mb-4">Authentication Error</h2>
+          <p className="text-gray-600 mb-4">Unable to load authentication service.</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="btn bg-blue-500 text-white px-6 py-2 rounded-xl"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const { createUser, signInWithGoogle } = authContext;
+
   const onSubmit = async (data) => {
     setLoading(true);
     try {
@@ -310,7 +351,10 @@ const Register = () => {
       }
 
       // 3️⃣ Update Firebase profile
-      await updateProfile(user, { displayName: data.username, photoURL: photoURL || null });
+      await updateProfile(user, { 
+        displayName: data.username, 
+        photoURL: photoURL || null 
+      });
 
       // 4️⃣ Save user to backend
       const userInfo = {
@@ -332,10 +376,15 @@ const Register = () => {
       });
       navigate("/");
     } catch (error) {
+      console.error("Registration error:", error);
       if (error.code === "auth/email-already-in-use") {
         Swal.fire("⚠️ Oops!", "This email is already registered. Please login.", "warning");
+      } else if (error.code === "auth/weak-password") {
+        Swal.fire("⚠️ Weak Password!", "Password should be at least 6 characters.", "warning");
+      } else if (error.code === "auth/invalid-email") {
+        Swal.fire("⚠️ Invalid Email!", "Please enter a valid email address.", "warning");
       } else {
-        Swal.fire("Error", error.message, "error");
+        Swal.fire("Error", error.message || "Registration failed. Please try again.", "error");
       }
     }
     setLoading(false);
@@ -364,7 +413,8 @@ const Register = () => {
       });
       navigate("/");
     } catch (error) {
-      Swal.fire("Error", error.message, "error");
+      console.error("Google sign-in error:", error);
+      Swal.fire("Error", error.message || "Google sign-in failed. Please try again.", "error");
     }
   };
 
@@ -377,7 +427,7 @@ const Register = () => {
           initial={{ y: 0 }}
           animate={{ y: [0, -50, 0] }}
           transition={{ duration: item.animationDuration, repeat: Infinity, delay: item.animationDelay }}
-          className="absolute text-gray-400 font-semibold"
+          className="absolute text-gray-400 font-semibold pointer-events-none"
           style={{ top: `${item.top}%`, left: `${item.left}%`, fontSize: `${item.fontSize}rem`, opacity: item.opacity }}
         >
           {item.name}
@@ -390,7 +440,7 @@ const Register = () => {
           initial={{ x: 0, y: 0 }}
           animate={{ x: [0, 100, 0], y: [0, 100, 0] }}
           transition={{ duration: item.duration, repeat: Infinity, delay: item.delay }}
-          className="absolute"
+          className="absolute pointer-events-none"
           style={{ top: `${item.top}%`, left: `${item.left}%`, fontSize: `${item.size}px`, opacity: item.opacity }}
         >
           {item.icon}
@@ -407,26 +457,75 @@ const Register = () => {
         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">Register</h2>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input type="text" placeholder="Username" {...register("username", { required: "Username is required" })} className="input input-bordered w-full rounded-xl" />
-          {errors.username && <p className="text-red-500">{errors.username.message}</p>}
+          <input 
+            type="text" 
+            placeholder="Username" 
+            {...register("username", { 
+              required: "Username is required",
+              minLength: {
+                value: 2,
+                message: "Username must be at least 2 characters"
+              }
+            })} 
+            className="input input-bordered w-full rounded-xl" 
+          />
+          {errors.username && <p className="text-red-500 text-sm">{errors.username.message}</p>}
 
-          <input type="email" placeholder="Email" {...register("email", { required: "Email is required" })} className="input input-bordered w-full rounded-xl" />
-          {errors.email && <p className="text-red-500">{errors.email.message}</p>}
+          <input 
+            type="email" 
+            placeholder="Email" 
+            {...register("email", { 
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address"
+              }
+            })} 
+            className="input input-bordered w-full rounded-xl" 
+          />
+          {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
 
-          <input type="password" placeholder="Password" {...register("password", { required: "Password is required", minLength: 6 })} className="input input-bordered w-full rounded-xl" />
-          {errors.password && <p className="text-red-500">{errors.password.message}</p>}
+          <input 
+            type="password" 
+            placeholder="Password" 
+            {...register("password", { 
+              required: "Password is required", 
+              minLength: {
+                value: 6,
+                message: "Password must be at least 6 characters"
+              }
+            })} 
+            className="input input-bordered w-full rounded-xl" 
+          />
+          {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
 
           {/* Photo Upload */}
-          <input type="file" accept="image/*" {...register("photo")} className="w-full" />
+          <div className="form-control">
+            <label className="label">
+              <span className="label-text">Profile Photo (Optional)</span>
+            </label>
+            <input 
+              type="file" 
+              accept="image/*" 
+              {...register("photo")} 
+              className="file-input file-input-bordered w-full rounded-xl" 
+            />
+          </div>
 
-          {/* Role: only User or Seller */}
-          <select {...register("role")} className="select select-bordered w-full rounded-xl" defaultValue="user">
-            <option value="user">User</option>
-            <option value="seller">Seller</option>
-          </select>
 
-          <button type="submit" disabled={loading} className="btn w-full bg-gradient-to-r from-blue-500 to-teal-500 text-white py-3 rounded-xl">
-            {loading ? "Registering..." : "Register"}
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="btn w-full bg-gradient-to-r from-blue-500 to-teal-500 text-white py-3 rounded-xl hover:from-blue-600 hover:to-teal-600 transition-all duration-300"
+          >
+            {loading ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                Registering...
+              </>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
 
@@ -436,8 +535,12 @@ const Register = () => {
 
         <div className="my-5 text-center text-gray-400">or</div>
 
-        <button onClick={handleGoogleRegister} className="btn btn-outline w-full flex items-center justify-center gap-2 py-3 rounded-xl">
-          <FcGoogle size={24} /> Sign in with Google
+        <button 
+          onClick={handleGoogleRegister} 
+          disabled={loading}
+          className="btn btn-outline w-full flex items-center justify-center gap-2 py-3 rounded-xl hover:bg-gray-50 transition-all duration-300"
+        >
+          <FcGoogle size={24} /> Sign up with Google
         </button>
       </motion.div>
     </div>

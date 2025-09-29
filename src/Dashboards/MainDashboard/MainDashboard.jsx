@@ -1,7 +1,3 @@
-
-
-
-// // components/MainDashboard.js
 // import React from 'react';
 // import { Link, Outlet } from 'react-router-dom';
 
@@ -74,8 +70,6 @@
 //               </Link>
 //             </li>
 
-
-
 //             <li>
 //               <Link
 //                 to="/dashboard/beSeller"
@@ -99,8 +93,6 @@
 //               </Link>
 //             </li>
 
-
-
 //             <li>
 //               <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
 //                 <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -110,12 +102,26 @@
 //               </a>
 //             </li>
 //             <li>
-//               <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
-//                 <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-//                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+//               <Link
+//                 to="/dashboard/transaction"
+//                 className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+//               >
+//                 <svg
+//                   className="w-5 h-5 mr-3"
+//                   fill="none"
+//                   stroke="currentColor"
+//                   viewBox="0 0 24 24"
+//                   xmlns="http://www.w3.org/2000/svg"
+//                 >
+//                   <path
+//                     strokeLinecap="round"
+//                     strokeLinejoin="round"
+//                     strokeWidth="2"
+//                     d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 16v-4m9-4a9 9 0 11-18 0 9 9 0 0118 0z"
+//                   />
 //                 </svg>
-//                 Customers
-//               </a>
+//                 Transaction History
+//               </Link>
 //             </li>
 
 //             <li>
@@ -140,11 +146,9 @@
 //               </Link>
 //             </li>
 
-
-
 //             <li>
 //               <Link
-//                 to={`/dashboard/editBanner/${banners[0]?._id || ""}`}
+//                 to="/dashboard/editBanner"
 //                 className="flex items-center p-2 rounded-lg hover:bg-blue-700"
 //               >
 //                 <svg
@@ -164,9 +168,6 @@
 //                 Edit Banner
 //               </Link>
 //             </li>
-
-
-
 
 //             <li>
 //               <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
@@ -195,20 +196,64 @@
 
 
 
-import React from 'react';
+
+
+
+
+import React, { useEffect, useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import useAxiosSecure from '../../hooks/useAxiosSecure'; // Adjust path as needed
 
 const MainDashboard = () => {
+  const { axiosSecure } = useAxiosSecure();
+  const [userRole, setUserRole] = useState('user');
+  const [userEmail, setUserEmail] = useState('');
+  const [loading, setLoading] = useState(true);
+
+  // Fetch user role on component mount
+  useEffect(() => {
+    const fetchUserRole = async () => {
+      try {
+        const response = await axiosSecure.get('/users/me/role');
+        if (response.data.success) {
+          setUserRole(response.data.role);
+          setUserEmail(response.data.email);
+        }
+      } catch (error) {
+        console.error('Error fetching user role:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUserRole();
+  }, [axiosSecure]);
+
+  if (loading) {
+    return (
+      <div className="flex h-screen bg-gray-100 items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
       <div className="w-64 bg-blue-800 text-white">
         <div className="p-4 border-b border-blue-700">
           <h1 className="text-xl font-bold">MediCare Dashboard</h1>
+          <p className="text-sm text-blue-200 mt-1 capitalize">
+            Role: {userRole} • {userEmail}
+          </p>
         </div>
 
         <nav className="p-4">
           <ul className="space-y-2">
+            {/* Common for all roles */}
             <li>
               <Link
                 to="/dashboard"
@@ -221,145 +266,175 @@ const MainDashboard = () => {
               </Link>
             </li>
 
-            <li>
-              <Link
-                to="/dashboard/sellerForm"
-                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M12 4v16m8-8H4"
-                  />
-                </svg>
-                Click to Sell
-              </Link>
-            </li>
+            {/* For SELLER role only */}
+            {userRole === 'seller' && (
+              <>
+                <li>
+                  <Link
+                    to="/dashboard/sellerForm"
+                    className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 4v16m8-8H4"
+                      />
+                    </svg>
+                    Click to Sell
+                  </Link>
+                </li>
 
-            <li>
-              <Link
-                to="/dashboard/sellerApplication"
-                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v12a2 2 0 01-2 2z"
-                  />
-                </svg>
-                Seller Application
-              </Link>
-            </li>
+                <li>
+                  <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
+                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                    Orders
+                  </a>
+                </li>
 
-            <li>
-              <Link
-                to="/dashboard/beSeller"
-                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M3 7h18M3 12h18M3 17h18M9 7v10M15 7v10"
-                  />
-                </svg>
-                Be a Seller
-              </Link>
-            </li>
+                <li>
+                  <Link
+                    to="/dashboard/manageMedicines"
+                    className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                      />
+                    </svg>
+                    My Posted Medicine
+                  </Link>
+                </li>
 
-            <li>
-              <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
-                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                </svg>
-                Orders
-              </a>
-            </li>
-            <li>
-              <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
-                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                </svg>
-                Customers
-              </a>
-            </li>
+                <li>
+                  <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
+                    <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+                    </svg>
+                    Reports
+                  </a>
+                </li>
+              </>
+            )}
 
-            <li>
-              <Link
-                to="/dashboard/manageMedicines"
-                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  />
-                </svg>
-                My Posted Medicine
-              </Link>
-            </li>
+            {/* For USER role only */}
+            {userRole === 'user' && (
+              <>
+                <li>
+                  <Link
+                    to="/dashboard/beSeller"
+                    className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M3 7h18M3 12h18M3 17h18M9 7v10M15 7v10"
+                      />
+                    </svg>
+                    Be a Seller
+                  </Link>
+                </li>
 
-            <li>
-              <Link
-                to="/dashboard/editBanner"
-                className="flex items-center p-2 rounded-lg hover:bg-blue-700"
-              >
-                <svg
-                  className="w-5 h-5 mr-3"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15.232 5.232l3.536 3.536M9 11l6 6H3v-6l6-6z"
-                  />
-                </svg>
-                Edit Banner
-              </Link>
-            </li>
+                <li>
+                  <Link
+                    to="/dashboard/transaction"
+                    className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8V4m0 16v-4m9-4a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    Transaction History
+                  </Link>
+                </li>
+              </>
+            )}
 
-            <li>
-              <a href="#" className="flex items-center p-2 rounded-lg hover:bg-blue-700">
-                <svg className="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
-                </svg>
-                Reports
-              </a>
-            </li>
+            {/* For ADMIN role only */}
+            {userRole === 'admin' && (
+              <>
+                <li>
+                  <Link
+                    to="/dashboard/sellerApplication"
+                    className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v12a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Seller Application
+                  </Link>
+                </li>
+
+                <li>
+                  <Link
+                    to="/dashboard/editBanner"
+                    className="flex items-center p-2 rounded-lg hover:bg-blue-700"
+                  >
+                    <svg
+                      className="w-5 h-5 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M15.232 5.232l3.536 3.536M9 11l6 6H3v-6l6-6z"
+                      />
+                    </svg>
+                    Edit Banner
+                  </Link>
+                </li>
+              </>
+            )}
           </ul>
         </nav>
       </div>
