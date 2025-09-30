@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
       { path: "/details/:id", element: <PrivateRoute><Details /></PrivateRoute> },
       { path: "/login", element: <Login /> },
       { path: "/auth/register", element: <Register /> },
-      { path: "/shop", element: <Shop />},
+      { path: " ", element: <Shop />},
       // { path: "/cart", element: <Cart></Cart> },
       
 

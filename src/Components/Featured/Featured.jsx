@@ -1,17 +1,25 @@
-// // Featured.jsx
 // import React, { useState, useEffect } from "react";
 // import { motion } from "framer-motion";
 // import axios from "axios";
 // import { Link } from "react-router-dom";
+// import Swal from 'sweetalert2'; // Import SweetAlert2
 
 // const Featured = () => {
-//   const [cart, setCart] = useState([]);
 //   const [featuredMedicines, setFeaturedMedicines] = useState([]);
+//   // Add state for cart count to trigger re-renders
+//   const [cartItemCount, setCartItemCount] = useState(0);
+
+//   useEffect(() => {
+//     // Initialize cart count from localStorage on component mount
+//     const currentCart = JSON.parse(localStorage.getItem('medicineCart')) || [];
+//     const total = currentCart.reduce((acc, item) => acc + item.quantity, 0);
+//     setCartItemCount(total);
+//   }, []);
 
 //   useEffect(() => {
 //     const fetchMedicines = async () => {
 //       try {
-//         const res = await axios.get("http://localhost:3000/medicine");
+//         const res = await axios.get("https://medicare-sever-site.vercel.app/medicine");
 //         setFeaturedMedicines(Array.isArray(res.data.data) ? res.data.data : []);
 //       } catch (err) {
 //         console.error("Failed to fetch medicines:", err);
@@ -21,19 +29,43 @@
 //   }, []);
 
 //   const addToCart = (medicine) => {
-//     setCart((prev) => {
-//       const existing = prev.find((item) => item._id === medicine._id);
-//       if (existing)
-//         return prev.map((item) =>
-//           item._id === medicine._id
-//             ? { ...item, quantity: item.quantity + 1 }
-//             : item
-//         );
-//       return [...prev, { ...medicine, quantity: 1 }];
+//     const currentCart = JSON.parse(localStorage.getItem('medicineCart')) || [];
+//     const existingItem = currentCart.find((item) => item._id === medicine._id);
+    
+//     let updatedCart;
+//     if (existingItem) {
+//       updatedCart = currentCart.map((item) =>
+//         item._id === medicine._id 
+//           ? { ...item, quantity: item.quantity + 1 } 
+//           : item
+//       );
+//     } else {
+//       updatedCart = [...currentCart, { ...medicine, quantity: 1 }];
+//     }
+    
+//     // Save updated cart to localStorage
+//     localStorage.setItem('medicineCart', JSON.stringify(updatedCart));
+    
+//     // Update state to trigger re-render with new count
+//     const newTotal = updatedCart.reduce((acc, item) => acc + item.quantity, 0);
+//     setCartItemCount(newTotal);
+    
+//     // Show SweetAlert2 confirmation
+//     Swal.fire({
+//       title: 'Added to Cart!',
+//       text: `${medicine.name} has been added to your cart.`,
+//       icon: 'success',
+//       timer: 1000, // Automatically close after 1 second
+//       timerProgressBar: true,
+//       showConfirmButton: false, // Hide the "OK" button
+//       background: 'rgba(255, 255, 255, 0.8)', // Transparent background
+//       customClass: {
+//         popup: 'transparent-alert' // Add a custom class for further styling
+//       }
 //     });
+    
+//     console.log('Added to cart:', medicine.name);
 //   };
-
-//   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
 
 //   return (
 //     <section className="container mx-auto px-4 mb-12">
@@ -41,11 +73,19 @@
 //         <h2 className="text-3xl font-bold relative pb-3 after:absolute after:bottom-0 after:left-0 after:w-16 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-teal-500">
 //           Featured Medicines
 //         </h2>
-//         <div className="mt-4 sm:mt-0 text-lg font-medium text-blue-600">
-//           Cart: {totalItems} items
+//         {/* Use the state variable here */}
+//         <div className="mt-4 sm:mt-0 text-lg font-medium text-blue-600 flex items-center gap-2">
+//           <span>Cart: {cartItemCount} items</span>
+//           <Link 
+//             to="/dashboard/transaction" 
+//             className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm transition-colors"
+//           >
+//             Checkout
+//           </Link>
 //         </div>
 //       </div>
 
+//       {/* ... rest of your JSX (grid of medicines) remains the same ... */}
 //       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
 //         {featuredMedicines.map((medicine, index) => (
 //           <motion.div
@@ -56,6 +96,7 @@
 //             whileHover={{ scale: 1.05, rotate: [0, 2, -2, 0] }}
 //             className="relative bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:-translate-y-2 hover:shadow-xl"
 //           >
+//             {/* ... existing medicine card content ... */}
 //             {medicine.discount > 0 && (
 //               <div className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
 //                 {medicine.discount}% OFF
@@ -120,24 +161,26 @@
 
 
 
-
-
-
-
-
-// Featured.jsx
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Swal from 'sweetalert2';
 
 const Featured = () => {
   const [featuredMedicines, setFeaturedMedicines] = useState([]);
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  useEffect(() => {
+    const currentCart = JSON.parse(localStorage.getItem('medicineCart')) || [];
+    const total = currentCart.reduce((acc, item) => acc + item.quantity, 0);
+    setCartItemCount(total);
+  }, []);
 
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const res = await axios.get("http://localhost:3000/medicine");
+        const res = await axios.get("https://medicare-sever-site.vercel.app/medicine");
         setFeaturedMedicines(Array.isArray(res.data.data) ? res.data.data : []);
       } catch (err) {
         console.error("Failed to fetch medicines:", err);
@@ -146,19 +189,8 @@ const Featured = () => {
     fetchMedicines();
   }, []);
 
-  // Get current cart from localStorage
-  const getCurrentCart = () => {
-    return JSON.parse(localStorage.getItem('medicineCart')) || [];
-  };
-
-  // Update cart count for display
-  const getTotalCartItems = () => {
-    const cart = getCurrentCart();
-    return cart.reduce((acc, item) => acc + item.quantity, 0);
-  };
-
   const addToCart = (medicine) => {
-    const currentCart = getCurrentCart();
+    const currentCart = JSON.parse(localStorage.getItem('medicineCart')) || [];
     const existingItem = currentCart.find((item) => item._id === medicine._id);
     
     let updatedCart;
@@ -172,34 +204,60 @@ const Featured = () => {
       updatedCart = [...currentCart, { ...medicine, quantity: 1 }];
     }
     
-    // Save to localStorage
     localStorage.setItem('medicineCart', JSON.stringify(updatedCart));
     
-    // Force update for cart display
-    window.dispatchEvent(new Event('storage'));
+    const newTotal = updatedCart.reduce((acc, item) => acc + item.quantity, 0);
+    setCartItemCount(newTotal);
+    
+    Swal.fire({
+      title: 'Added to Cart!',
+      text: `${medicine.name} has been added to your cart.`,
+      icon: 'success',
+      timer: 1000,
+      timerProgressBar: true,
+      showConfirmButton: false,
+      background: 'rgba(255, 255, 255, 0.8)',
+      customClass: {
+        popup: 'transparent-alert'
+      }
+    });
     
     console.log('Added to cart:', medicine.name);
   };
 
-  const totalItems = getTotalCartItems();
+  // Cart Summary Component for reusability
+  const CartSummary = () => (
+    <div className="text-lg font-medium text-blue-600 flex items-center gap-2">
+      <span>Cart: {cartItemCount} items</span>
+      <Link 
+        to="/dashboard/transaction" 
+        className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm transition-colors"
+      >
+        Checkout
+      </Link>
+    </div>
+  );
 
   return (
     <section className="container mx-auto px-4 mb-12">
+      {/* Header Section with First Cart */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
         <h2 className="text-3xl font-bold relative pb-3 after:absolute after:bottom-0 after:left-0 after:w-16 after:h-1 after:bg-gradient-to-r after:from-blue-500 after:to-teal-500">
           Featured Medicines
         </h2>
-        <div className="mt-4 sm:mt-0 text-lg font-medium text-blue-600 flex items-center gap-2">
-          <span>Cart: {totalItems} items</span>
-          <Link 
-            to="/transactions" 
-            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-full text-sm transition-colors"
-          >
-            Checkout
-          </Link>
+        
+        {/* First Cart - Hidden on mobile, visible on larger screens */}
+        <div className="hidden sm:flex">
+          <CartSummary />
+        </div>
+
+        {/* Second Cart for Mobile - Only visible on mobile */}
+        <div className="sm:hidden mt-4">
+          <CartSummary />
         </div>
       </div>
 
+      {/* Medicines Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
         {featuredMedicines.map((medicine, index) => (
           <motion.div
@@ -262,6 +320,16 @@ const Featured = () => {
           </motion.div>
         ))}
       </div>
+
+      {/* Second Mobile Cart - Fixed at bottom for easy access */}
+      <div className="sm:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-lg z-50">
+        <div className="container mx-auto">
+          <CartSummary />
+        </div>
+      </div>
+
+      {/* Add padding to prevent content from being hidden behind fixed cart */}
+      <div className="sm:hidden h-20"></div>
     </section>
   );
 };

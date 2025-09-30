@@ -14,7 +14,7 @@ const ShopByCaregory = () => {
         // always send lowercase category to backend
         const category = id.toLowerCase();
         const { data } = await axios.get(
-          `http://localhost:3000/medicine?category=${category}`
+          `https://medicare-sever-site.vercel.app/medicine?category=${category}`
         );
 
         // remove details field if exists

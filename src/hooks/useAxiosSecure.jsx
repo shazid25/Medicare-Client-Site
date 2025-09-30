@@ -4,7 +4,7 @@ import { auth } from '../firebase/firebase.init';
 
 // Create axios instance outside the hook to avoid recreation
 const axiosSecureInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:3000',
+  baseURL: import.meta.env.VITE_API_URL || 'https://medicare-sever-site.vercel.app',
 });
 
 const useAxiosSecure = () => {

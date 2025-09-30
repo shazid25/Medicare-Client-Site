@@ -12,7 +12,7 @@ const Shop = () => {
   useEffect(() => {
     const fetchMedicines = async () => {
       try {
-        const { data } = await axios.get("http://localhost:3000/medicine");
+        const { data } = await axios.get("https://medicare-sever-site.vercel.app/medicine");
         setMedicines(data);
         setLoading(false);
       } catch (error) {
@@ -41,7 +41,7 @@ const Shop = () => {
   const openModal = async (medicineId) => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/medicine/${medicineId}`
+        `https://medicare-sever-site.vercel.app/medicine/${medicineId}`
       );
       setSelectedMedicine(data);
       setIsModalOpen(true);

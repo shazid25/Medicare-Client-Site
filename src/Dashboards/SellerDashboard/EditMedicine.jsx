@@ -43,7 +43,7 @@ const EditMedicine = () => {
         const token = await getToken();
         if (!token) return;
 
-        const response = await axios.get(`http://localhost:3000/medicine/${id}`, {
+        const response = await axios.get(`https://medicare-sever-site.vercel.app/medicine/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -134,7 +134,7 @@ const EditMedicine = () => {
         updatedAt: new Date().toISOString(),
       };
 
-      await axios.put(`http://localhost:3000/medicine/${id}`, payload, {
+      await axios.put(`https://medicare-sever-site.vercel.app/medicine/${id}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

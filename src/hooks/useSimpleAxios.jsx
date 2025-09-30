@@ -3,7 +3,7 @@ import { auth } from '../firebase/firebase.init';
 
 const useSimpleAxios = () => {
   const axiosInstance = axios.create({
-    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:3000',
+    baseURL: process.env.REACT_APP_API_URL || 'https://medicare-sever-site.vercel.app',
   });
 
   // Add token to requests

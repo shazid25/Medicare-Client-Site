@@ -48,7 +48,7 @@ const UserTransaction = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:3000/transactions/user/my-transactions', {
+      const response = await axios.get('https://medicare-sever-site.vercel.app/transactions/user/my-transactions', {
         headers: { Authorization: `Bearer ${token}` }
       });
       if (response.data.success) {
@@ -165,7 +165,7 @@ const UserTransaction = () => {
 
       console.log('Sending transaction:', transactionData);
 
-      const response = await axios.post('http://localhost:3000/transactions', transactionData, {
+      const response = await axios.post('https://medicare-sever-site.vercel.app/transactions', transactionData, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
